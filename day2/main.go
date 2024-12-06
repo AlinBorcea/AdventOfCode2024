@@ -83,16 +83,16 @@ func recordStatus(difs []int) RecordStatus {
 			x *= -1
 		}
 
-		if x < 0 || x > 3 {
+		if x > 3 {
 			badRange++
 		}
 	}
 
 	tolerance := 1
 	if badRange > 0 {
-		return RecordLevelsUnstable
+		tolerance--
 	}
-	if zeros > 1 {
+	if zeros > 0 {
 		tolerance--
 	}
 
