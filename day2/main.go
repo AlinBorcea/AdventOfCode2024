@@ -29,10 +29,52 @@ func main() {
 	input := readInput("input.txt")
 
 	output := Output{}
-	output.levelDifferences = calculateLevelDifferences(input.records)
-	output.safeRecordsCount = calculateNumberOfSafeRecords(output.levelDifferences)
+	//output.levelDifferences = calculateLevelDifferences(input.records)
+	output.safeRecordsCount = calculateNumberOfSafeRecordsSimple(input.records)
 
 	fmt.Println(output.safeRecordsCount)
+}
+
+func calculateNumberOfSafeRecordsSimple(records [][]int) int {
+	count := 0
+
+	for i := range records {
+		increasingNumbers := 0
+		decreasingNumbers := 0
+		equalNumbers := 0
+		badRanges := 0
+		for j := 1; j < len(records[i]); j++ {
+			if records[i][j-1] < records[i][j] { //increasing
+				increasingNumbers++
+			} else if records[i][j-1] > records[i][j] { //decreasing
+				decreasingNumbers++
+			} else if records[i][j-1] == records[i][j] { //equal
+				equalNumbers++
+			}
+
+			x := records[i][j-1] - records[i][j]
+			if x < 0 {
+				x *= -1
+			}
+			if x < 1 || x > 3 {
+				badRanges++
+			}
+		}
+
+		mistakes := 0
+		if increasingNumbers == len(records[i])-1 || decreasingNumbers == len(records[i])-1 {
+			mistakes++
+		}
+		if badRanges > 0 {
+			mistakes++
+		}
+
+		if mistakes <= 1 {
+			count++
+		}
+	}
+
+	return count
 }
 
 func calculateLevelDifferences(records [][]int) [][]int {
